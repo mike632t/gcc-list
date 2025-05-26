@@ -27,6 +27,7 @@
  * 24 May 25  0.3  005 - Made list routines 'generic' using separate helper
  *                       functions to compare different data types or print
  *                       the values (not unlike the qsort() function)- MT
+ *                 006 - Modified to use exit() - MT
  *
  */
 
@@ -168,5 +169,5 @@ int main() {
    h_list = h_prepend(h_list, s_values[0], strlen(s_values[0]));
    v_print(h_list, v_prtstr);
 
-   return 0;
+   exit(EXIT_SUCCESS);
 }
