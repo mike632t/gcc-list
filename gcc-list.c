@@ -21,57 +21,58 @@
  *
  * 23 May 25  0.1  001 - Initial version - MT
  *                 002 - Items can be inserted into the list in order - MT
+ *            0.2  003 - Create list using strings - MT
  *
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-struct node
-{
-    int  data;
+struct node {
+    char *data;
     struct node *next;
 };
 
 typedef struct node node;
 
-node *h_new(int i_data) /* Create a new node */
+node *h_new(char *s_data) /* Create a new node */
 {
    node *h_node;
    h_node = (node*)malloc(sizeof(*h_node));
-   h_node->data = i_data;
+   h_node->data = s_data; /* Pointer to string */
    h_node->next = NULL;
    return h_node;
 }
 
-node *h_prepend(node *h_list, int i_data) /* Prepend item to list */
+node *h_prepend(node *h_list, char *s_data) /* Prepend item to list */
 {
-   node *h_node = h_new(i_data);
+   node *h_node = h_new(s_data);
    h_node->next = h_list;
    return h_node;
 }
 
-node *h_append(node *h_list, int i_data) /* Append item to list */
+node *h_append(node *h_list, char *s_data) /* Append item to list */
 {
    if (h_list != NULL)
-      h_list->next = h_append(h_list->next, i_data);
+      h_list->next = h_append(h_list->next, s_data);
    else
-      h_list = h_new(i_data);
+      h_list = h_new(s_data);
    return h_list;
 }
 
-node* h_insert(node *h_list, int i_data) /* Insert item into list */
+node* h_insert(node *h_list, char *s_data) /* Insert item into list */
 {
    if (h_list != NULL)
    {
-      if (h_list->data > i_data) 
-         h_list = h_prepend(h_list, i_data);
+      if (strcmp(h_list->data, s_data) > 0) 
+         h_list = h_prepend(h_list, s_data);
       else
-         h_list->next = h_insert(h_list->next, i_data);
+         h_list->next = h_insert(h_list->next, s_data);
    }
    else
    {
-      h_list = h_new(i_data);
+      h_list = h_new(s_data);
    }
    return h_list;
 }
@@ -80,7 +81,7 @@ void v_print(node *h_list) /* Print list */
 {
     while (h_list != NULL)
     {
-        printf(" %d", h_list->data);
+        printf(" %s", h_list->data);
         h_list = h_list->next;
     }
     printf("\n");
@@ -93,14 +94,18 @@ int main()
    int i_size;
    size_t t_size;
 
-   int i_values[] =  { 0, 5, 1, 3, 8, 4, 9, 6, 2, 7 };
-   
-   h_list = NULL; /* An empty list! */
-   t_size = sizeof(i_values[0]);
-   i_size = sizeof(i_values) / t_size;
-   for (int i_count = 0; i_count < i_size; ++i_count)
-      h_list = h_insert(h_list, i_values[i_count]); /* Insert in order */
+   char *s_values[] = { "William", "Michael", "Lisa", "John", "Mary",
+                        "David", "James", "Karen", "Robert", "Linda",
+                        "Mark",  "Patricia", "Deborah", "Richard",
+                        "Elizabeth" };
 
+   h_list = NULL; /* An empty list! */
+   t_size = sizeof(s_values[0]);
+   i_size = sizeof(s_values) / t_size;
+   for (int i_count = 1; i_count < i_size; ++i_count)
+      h_list = h_insert(h_list, s_values[i_count]); /* Insert in order */
+
+   h_list = h_append(h_list, s_values[0]); /* Append to list */
    v_print(h_list); /* Print list */
 
    return 0;
