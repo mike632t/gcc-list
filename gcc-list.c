@@ -22,6 +22,8 @@
  * 23 May 25  0.1  001 - Initial version - MT
  *                 002 - Items can be inserted into the list in order - MT
  *            0.2  003 - Create list using strings - MT
+ *                 004 - Allocates storage for each string and saves a copy
+ *                       of the data with each node - MT
  *
  */
 
@@ -40,7 +42,8 @@ node *h_new(char *s_data) /* Create a new node */
 {
    node *h_node;
    h_node = (node*)malloc(sizeof(*h_node));
-   h_node->data = s_data; /* Pointer to string */
+   h_node->data = malloc(strlen(s_data)); /* Allocates storage for string */
+   memcpy(h_node->data, s_data, strlen(s_data)); /* and copies it to node */ 
    h_node->next = NULL;
    return h_node;
 }
